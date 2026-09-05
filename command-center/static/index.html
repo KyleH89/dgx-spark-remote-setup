@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>DGX Command Center</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <div>
+          <p class="eyebrow">LOCAL DGX SPARK FLEET</p>
+          <h1>DGX Command Center</h1>
+          <p id="freshness" class="muted">Checking both Sparks…</p>
+        </div>
+        <button id="refresh" type="button">Refresh now</button>
+      </header>
+
+      <section id="summary" class="summary loading">
+        <div class="status-dot"></div>
+        <div>
+          <p class="label">Overall status</p>
+          <h2 id="summary-title">Checking the fleet</h2>
+          <p id="summary-detail">Collecting a fresh private snapshot.</p>
+        </div>
+        <div class="active-model">
+          <p class="label">Active model</p>
+          <strong id="active-model">Checking…</strong>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading performance-heading">
+          <div>
+            <p class="eyebrow">REAL LOCAL MODEL USAGE</p>
+            <h2>Speed history</h2>
+          </div>
+          <div class="range-picker" aria-label="Performance history window">
+            <button type="button" data-hours="1">1 hour</button>
+            <button type="button" class="selected" data-hours="24">24 hours</button>
+            <button type="button" data-hours="168">7 days</button>
+          </div>
+        </div>
+
+        <div id="performance-status" class="performance-status learning">
+          <div>
+            <p class="label">Performance verdict</p>
+            <h3 id="performance-title">Learning your normal speed</h3>
+            <p id="performance-message" class="muted">Reading real requests from the local model.</p>
+          </div>
+          <span id="performance-badge" class="badge learning">Learning</span>
+        </div>
+
+        <div id="performance-cards" class="performance-cards">
+          <div class="performance-card"><span>Decode speed</span><strong>Checking…</strong></div>
+          <div class="performance-card"><span>First token</span><strong>Checking…</strong></div>
+          <div class="performance-card"><span>Completed requests</span><strong>Checking…</strong></div>
+          <div class="performance-card"><span>Reliability</span><strong>Checking…</strong></div>
+        </div>
+
+        <div class="performance-grid">
+          <div class="panel chart-panel">
+            <div class="chart-title">
+              <div>
+                <p class="label">SINGLE-RESPONSE DECODE SPEED</p>
+                <h3>Generated tokens per second</h3>
+              </div>
+              <p id="performance-window" class="muted">Building history…</p>
+            </div>
+            <div id="performance-chart" class="performance-chart" aria-label="Decode speed history"></div>
+            <div class="chart-legend">
+              <span><i class="legend-line actual"></i>Your measured speed</span>
+              <span><i class="legend-line baseline"></i><span id="performance-reference">18.3 tok/s published reference</span></span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="section-heading compact">
+              <div>
+                <p class="eyebrow">WHY IT MAY FEEL SLOW</p>
+                <h2>Live diagnostics</h2>
+              </div>
+            </div>
+            <div id="performance-diagnostics" class="cluster"></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">THE TWO MACHINES</p>
+            <h2>Sparks</h2>
+          </div>
+          <p class="muted">Management stays private over Tailscale.</p>
+        </div>
+        <div id="node-grid" class="node-grid"></div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">HEAT</p>
+            <h2>Temperature</h2>
+          </div>
+          <p id="thermal-window" class="muted">Uses the same 1 hour / 24 hours / 7 days buttons as speed.</p>
+        </div>
+
+        <div id="thermal-status" class="performance-status learning">
+          <div>
+            <p class="label">Heat verdict</p>
+            <h3 id="thermal-title">Checking temperature</h3>
+            <p id="thermal-message" class="muted">Reading GPU temperature from both Sparks.</p>
+          </div>
+          <span id="thermal-badge" class="badge learning">Checking</span>
+        </div>
+
+        <div class="panel chart-panel">
+          <div class="chart-title">
+            <div>
+              <p class="label">GPU TEMPERATURE</p>
+              <h3>Spark A and Spark B</h3>
+            </div>
+            <p id="thermal-peak" class="muted">Peak in this window…</p>
+          </div>
+          <div id="thermal-chart" class="performance-chart" aria-label="GPU temperature history"></div>
+          <div class="chart-legend">
+            <span><i class="legend-line spark-a"></i>Spark A</span>
+            <span><i class="legend-line spark-b"></i>Spark B</span>
+            <span><i class="legend-band yellow"></i>Yellow 75°C</span>
+            <span><i class="legend-band red"></i>Red 85°C</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="two-column">
+        <div class="panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">HIGH-SPEED PAIR</p>
+              <h2>Two-Spark cluster</h2>
+            </div>
+          </div>
+          <div id="cluster" class="cluster"></div>
+        </div>
+
+        <div class="panel">
+          <div class="section-heading compact">
+            <div>
+              <p class="eyebrow">YOUR ATTENTION</p>
+              <h2>What needs action</h2>
+            </div>
+          </div>
+          <div id="alerts" class="alerts"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">ONLY THE TOP THREE</p>
+            <h2>Model profiles</h2>
+          </div>
+          <p class="muted">One profile uses the pair at a time.</p>
+        </div>
+        <div id="models" class="model-grid"></div>
+      </section>
+
+      <footer>
+        <span>Private to this Mac Mini</span>
+        <span>Nothing is exposed to the public internet</span>
+      </footer>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>

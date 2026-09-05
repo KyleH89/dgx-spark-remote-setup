@@ -61,6 +61,8 @@ Not marketing. These are the gates that passed on the original pair:
 
 Two Sparks are still two 128 GB machines. They are not one 256 GB computer. Cluster mode is optional. The first useful model should be a single-node appliance.
 
+After SSH works, you can load a loopback-only fleet page from [`command-center/`](command-center/README.md): copy `config.example.json` to `config.json`, set your Tailscale metrics URL and SSH aliases, run `python3 server.py`, open `http://127.0.0.1:8792/`.
+
 Flagship two-node recipes (DeepSeek, GLM, Qwen3.8, custom kernels) are a later job. This skill gets you remote, private, and serving something real. The follow-on watchlist of recipe people lives in `references/recipe-watchlist.md`.
 
 ## Safety

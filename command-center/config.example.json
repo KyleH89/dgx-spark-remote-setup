@@ -1,0 +1,17 @@
+{
+  "host": "127.0.0.1",
+  "port": 8792,
+  "metrics_url": "http://YOUR_SPARK_TAILSCALE_IP:8000/metrics",
+  "model_name": "your-served-model-name",
+  "model_reference_tps": 18.251,
+  "model_reference_source": "Replace with a published or measured single-stream baseline for YOUR recipe",
+  "nodes": {
+    "spark_a": { "name": "Spark A", "ssh": "spark-a", "role": "Head" },
+    "spark_b": { "name": "Spark B", "ssh": "spark-b", "role": "Worker" }
+  },
+  "desktop_bookmarks": {},
+  "dashboard_links": {
+    "dashboard_a": "http://127.0.0.1:11101",
+    "dashboard_b": "http://127.0.0.1:11102"
+  }
+}
