@@ -1,5 +1,7 @@
 # DGX Spark remote setup
 
+If you just unboxed a Spark and you are not a Linux person, read **[START_HERE.md](START_HERE.md)** then **[FAQ.md](FAQ.md)**.
+
 A skill you install on the coding agent you already use — Codex, Claude Code, Hermes, Grok, or anything that reads `SKILL.md` — so the agent can set up one or two [NVIDIA DGX Sparks](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) from another computer.
 
 You still do a short physical first-boot on each box. After Tailscale and SSH work, you should not have to sit at the Spark desktop installing models.
