@@ -44,7 +44,7 @@ PORT = int(_CFG.get("port", 8792))
 
 MODEL_METRICS_URL = str(_CFG["metrics_url"])
 MODEL_NAME = str(_CFG.get("model_name", "local-model"))
-MODEL_REFERENCE_TPS = float(_CFG.get("model_reference_tps", 18.251))
+MODEL_REFERENCE_TPS = float(_CFG.get("model_reference_tps", 20.0))
 MODEL_REFERENCE_SOURCE = str(
     _CFG.get("model_reference_source", "Replace with your measured or published baseline")
 )
@@ -94,14 +94,10 @@ printf 'disk_total_kib='; df -Pk /srv 2>/dev/null | awk 'NR==2 {print $2}' || df
 printf 'disk_available_kib='; df -Pk /srv 2>/dev/null | awk 'NR==2 {print $4}' || df -Pk / | awk 'NR==2 {print $4}'
 printf 'cluster_link='; ip -br link show enp1s0f0np0 2>/dev/null | awk '{print $2}' || true
 printf 'tailscale_ip='; tailscale ip -4 2>/dev/null | head -1 || true
-for service in dgx-model.service dgx-deepseek-head.service dgx-deepseek-worker.service dgx-qwen38-head.service dgx-qwen38-worker.service dgx-glm53-head.service dgx-glm53-worker.service; do
+for service in dgx-model.service; do
   printf 'service_%s=' "${service%.service}"
   systemctl is-active "${service}" 2>/dev/null || true
 done
-if systemctl is-active --quiet dgx-deepseek-head.service; then
-  printf 'deepseek_ready='
-  if sudo -n /usr/local/libexec/dgx-deepseek-health >/dev/null 2>&1; then echo yes; else echo no; fi
-fi
 if command -v nvidia-smi >/dev/null 2>&1; then
   printf 'gpu='; nvidia-smi --query-gpu=utilization.gpu,temperature.gpu,power.draw,clocks_event_reasons.sw_thermal_slowdown,clocks_event_reasons.hw_thermal_slowdown --format=csv,noheader,nounits 2>/dev/null | head -1 || true
 fi
@@ -521,7 +517,6 @@ def collect_node(key: str, configuration: dict[str, str]) -> dict[str, object]:
             ),
             "cluster_link": raw.get("cluster_link", "UNKNOWN"),
             "services": services,
-            "deepseek_ready": raw.get("deepseek_ready") == "yes",
             "latency_ms": round((time.monotonic() - started) * 1000),
             "observed_at": utc_now(),
             "error": None,
@@ -546,9 +541,9 @@ def load_portfolio() -> list[dict[str, object]]:
         except (OSError, json.JSONDecodeError):
             pass
     return [
-        {"name": "DeepSeek V4 Flash Vision", "status": "Installing", "role": "Vision + long context"},
-        {"name": "Qwen3.8 Flash-Next", "status": "Queued", "role": "Fast daily driver"},
-        {"name": "GLM-5.3 Flash EXL3", "status": "Queued", "role": "Difficult reasoning"},
+        {"name": "Primary model", "status": "Queued", "role": "Your served model"},
+        {"name": "Second model", "status": "Queued", "role": "Optional"},
+        {"name": "Third model", "status": "Queued", "role": "Optional"},
     ]
 
 
@@ -599,19 +594,10 @@ def fleet_state() -> dict[str, object]:
                 }
             )
 
-    a_services = a.get("services", {})
-    b_services = b.get("services", {})
-    deepseek_services_active = (
-        a_services.get("dgx-deepseek-head") == "active"
-        and b_services.get("dgx-deepseek-worker") == "active"
-    )
-    if deepseek_services_active and a.get("deepseek_ready"):
-        active_model = "DeepSeek V4 Flash Vision"
-    elif deepseek_services_active:
-        active_model = "DeepSeek V4 Flash Vision · loading"
-        alerts.append({"level": "warning", "message": "DeepSeek is loading across both Sparks."})
-    elif a_services.get("dgx-model") == "active":
-        active_model = "Qwen3.6 rollback"
+    raw_services = a.get("services")
+    a_services = raw_services if isinstance(raw_services, dict) else {}
+    if a_services.get("dgx-model") == "active":
+        active_model = MODEL_NAME
     else:
         active_model = "No model ready"
 

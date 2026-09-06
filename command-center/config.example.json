@@ -3,7 +3,7 @@
   "port": 8792,
   "metrics_url": "http://YOUR_SPARK_TAILSCALE_IP:8000/metrics",
   "model_name": "your-served-model-name",
-  "model_reference_tps": 18.251,
+  "model_reference_tps": 20,
   "model_reference_source": "Replace with a published or measured single-stream baseline for YOUR recipe",
   "nodes": {
     "spark_a": { "name": "Spark A", "ssh": "spark-a", "role": "Head" },

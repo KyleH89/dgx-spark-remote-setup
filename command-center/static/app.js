@@ -61,7 +61,7 @@ function nodeCard(node, dashboardUrl, desktopUrl) {
 
 function performanceChart(series, baseline) {
   if (!series.length) {
-    return `<div class="chart-empty"><strong>History starts now</strong><span>The current lifetime average is shown above. Trend points appear as Hermes completes new requests.</span></div>`;
+    return `<div class="chart-empty"><strong>History starts now</strong><span>The current lifetime average is shown above. Trend points appear as your client completes new requests.</span></div>`;
   }
 
   const width = 760;
