@@ -1,0 +1,6 @@
+.DS_Store
+*.swp
+.idea/
+.vscode/
+command-center/config.json
+command-center/state/
